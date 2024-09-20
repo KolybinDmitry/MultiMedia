@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Управление категориями изображений</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Управление категориями изображений</h1>
+
+  <form action="/image-category/add" th:object="${category}" method="post" class="mb-4">
+    <div class="form-group">
+      <label for="name">Название категории</label>
+      <input type="text" id="name" class="form-control" th:field="*{name}" required/>
+      <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Неправильное название</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить категорию</button>
+  </form>
+
+  <h2>Список категорий:</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="category : ${categories}">
+      <tr>
+        <td th:text="${category.id}"></td>
+        <td th:text="${category.name}"></td>
+        <td>
+          <form action="/image-category/update" method="post" style="display:inline;" th:object="${category}">
+            <input type="hidden" name="id" th:value="${category.id}">
+
+            <input type="text" class="form-control" th:field="*{name}" th:value="*{name}" required/>
+
+            <button type="submit" class="btn btn-warning">Изменить</button>
+          </form>
+          <form action="/image-category/delete/{id}" th:action="'/image-category/delete/' + ${category.id}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+        </td>
+      </tr>
+    </th:block>
+    </tbody>
+  </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

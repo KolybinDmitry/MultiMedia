@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Управление категориями видео</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Управление категориями видео</h1>
+
+  <form action="/video-category/add" th:object="${category}" method="post" class="mb-4">
+    <div class="form-group">
+      <label for="name">Название категории</label>
+      <input type="text" id="name" class="form-control" th:field="*{name}" required/>
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить категорию</button>
+  </form>
+
+  <h2>Список категорий:</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Название</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="category : ${categories}">
+      <tr>
+        <td th:text="${category.id}"></td>
+        <td th:text="${category.name}"></td>
+        <td>
+          <form action="/video-category/update" method="post" style="display:inline;" th:object="${category}">
+            <input type="hidden" name="id" th:value="${category.id}">
+            <input type="text" name="name" th:value="${category.name}">
+            <button type="submit" class="btn btn-warning">Изменить</button>
+          </form>
+          <form action="/video-category/delete/{id}" th:action="'/video-category/delete/' + ${category.id}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+        </td>
+      </tr>
+    </th:block>
+    </tbody>
+  </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

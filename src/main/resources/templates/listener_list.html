@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Управление слушателями</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Управление слушателями</h1>
+
+  <form action="/listeners/add" th:object="${listener}" method="post" class="mb-4">
+    <div class="form-group">
+      <label for="name">Имя слушателя</label>
+      <input type="text" id="name" class="form-control" th:field="*{name}" required/>
+    </div>
+    <div class="form-group">
+      <label for="audios">Аудиотреки</label>
+      <select multiple class="form-control" id="audios" th:field="*{listenedAudios}">
+        <option th:each="audio : ${audios}" th:value="${audio.id}" th:text="${audio.title}"></option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить слушателя</button>
+  </form>
+
+  <h2>Список слушателей:</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Имя</th>
+      <th>Аудиотреки</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="listener : ${listeners}" th:object="${listener}">
+      <tr>
+        <td th:text="${listener.id}"></td>
+        <td th:text="${listener.name}"></td>
+        <td>
+          <span th:each="audio : ${listener.listenedAudios}" th:text="${audio.title}"></span>
+        </td>
+        <td>
+          <form action="/listeners/update" method="post" style="display:inline;" th:object="${listener}">
+            <input type="hidden" name="id" th:value="${listener.id}">
+            <input type="text" class="form-control" th:field="*{name}" required/>
+
+            <div class="form-group">
+              <label for="audios">Аудиотреки</label>
+              <select multiple class="form-control" th:field="*{listenedAudios}">
+                <option th:each="audio : ${audios}" th:value="${audio.id}" th:text="${audio.title}"></option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-warning">Изменить</button>
+          </form>
+          <form action="/listeners/delete/{id}" th:action="'/listeners/delete/' + ${listener.id}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+        </td>
+      </tr>
+    </th:block>
+    </tbody>
+  </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
